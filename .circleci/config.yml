@@ -9,8 +9,18 @@ jobs:
       - checkout
       - node/with-cache:
           steps:
-            - run: npm install
-            - run: npm test
+            - run: 
+                name: Install Dependencies
+                command: npm install
+            - run: 
+                name: Run Tests
+                command: npm test
+            - run: 
+                name: Create Build Folder
+                command: npm run-script build
+            - run:
+                name: Deploy to Firebase
+                command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
 workflows:
     build-and-test:
       jobs:
