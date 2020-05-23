@@ -1,0 +1,28 @@
+version: 2.1
+orbs:
+  node: circleci/node@1.1.6
+jobs:
+  build:
+    working_directory: ~/meal-planner
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/with-cache:
+          steps:
+            - run: 
+                name: Install Dependencies
+                command: npm install
+            - run: 
+                name: Run Tests
+                command: npm test
+            - run: 
+                name: Create Build Folder
+                command: npm run-script build
+            - run:
+                name: Deploy to Firebase
+                command: ./node_modules/.bin/firebase deploy --token "$FIREBASE_TOKEN" --only hosting
+workflows:
+    build-and-test:
+      jobs:
+        - build
