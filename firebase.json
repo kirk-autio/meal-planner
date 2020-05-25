@@ -1,7 +1,7 @@
 {
   "hosting": {
     "site": "simplifry",
-    "public": "public",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",
