@@ -1,9 +1,9 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin/lib/';
-import * as express from 'express';
+import express from 'express';
 import {initializeApp} from "firebase-admin";
 import * as password from 'password-hash';
-import bodyParser = require("body-parser");
+import bodyParser from "body-parser";
 
 initializeApp();
 const app = express();
@@ -31,9 +31,9 @@ app.post('/login', async (request, response) => {
         });
 
         if (users.length > 0) 
-            response.status(200).json(users[0]);
+            response.set('Access-Control-Allow-Origin', '*').status(200).json(users[0]);
         else
-            response.status(200).json({error: "invalid login credentials"});
+            response.set('Access-Control-Allow-Origin', '*').status(200).json({error: "invalid login credentials"});
     } catch (error) {
         response.status(500).send(error);
     }
