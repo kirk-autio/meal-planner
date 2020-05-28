@@ -4,7 +4,7 @@ import {Dispatch} from "react";
 import {IActionUnion, makeAction} from "./action";
 import * as qs from 'querystring';
 
-const host_url: string = "https://us-central1-mealplanner-cf93f.cloudfunctions.net/userApi/v1"
+const host_url: string = "https://us-central1-mealplanner-cf93f.cloudfunctions.net/api/v1"
 
 export enum UserActionTypes {
     LOGIN_STARTED = "USER/LOGIN_STARTED",
@@ -22,7 +22,7 @@ export function login(username: string, password: string) : Dispatch<any> {
     return dispatch => {
         dispatch(actions.loginStarted());
 
-        Axios.post(`${host_url}/login`, qs.stringify({username: username, password: password}), {headers: {'Content-Type': 'x-www-form-urlencoded'}})
+        Axios.post(`${host_url}/users/login`, qs.stringify({username: username, password: password}), {headers: {'Content-Type': 'x-www-form-urlencoded'}})
         .then(response => {
             const user = JSON.parse(response.data)
             dispatch(actions.loggedIn(new UserState(user.token, user.display, user.email)));
