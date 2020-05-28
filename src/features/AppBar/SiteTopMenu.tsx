@@ -6,7 +6,7 @@ import AppBar from "@material-ui/core/AppBar";
 import * as React from "react";
 import {AppState} from "../../app/store";
 import {connect} from "react-redux";
-import {Dispatch} from "react";
+import {Dispatch, useRef} from "react";
 import {toggleAppBar} from "../../app/actions/appBarActions";
 import {IUserState} from "../../app/state/userState";
 import {login} from "../../app/actions/userActions";
@@ -24,12 +24,15 @@ interface IProps {
 }
 
 class SiteMenu extends React.Component<IProps> {
+    private username = React.createRef<any>();
+    private password = React.createRef<any>();
+    
     Login = () => {
         return (
             <form>
-                <TextField className="menuInput" size="small" variant="filled" label="Username" />
-                <TextField className="menuInput" size="small" variant="filled" label="Password" />
-                <Button color="inherit" onClick={() => this.props.login("", "")}>Login</Button>
+                <TextField inputRef={this.username} className="menuInput" size="small" variant="filled" label="Username" />
+                <TextField inputRef={this.password} className="menuInput" size="small" variant="filled" label="Password" />
+                <Button color="inherit" onClick={() => this.props.login(this.username.current.value, this.password.current.value)}>Login</Button>
             </form>    
         )
     }

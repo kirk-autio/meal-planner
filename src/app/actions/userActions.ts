@@ -21,7 +21,8 @@ const actions = {
 export function login(username: string, password: string) : Dispatch<any> {
     return dispatch => {
         dispatch(actions.loginStarted());
-
+    
+        alert(username);
         Axios.post(`${host_url}/users/login`, qs.stringify({username: username, password: password}), {headers: {'Content-Type': 'x-www-form-urlencoded'}})
         .then(response => {
             const user = JSON.parse(response.data)
@@ -34,4 +35,3 @@ export function login(username: string, password: string) : Dispatch<any> {
 }
 
 export type UserActions = IActionUnion<typeof actions>
-// export type UserActions = LoginStartedAction | LoggedInAction | LoginFailedAction;
