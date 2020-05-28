@@ -1,23 +1,17 @@
-import * as functions from 'firebase-functions';
+
 import * as admin from 'firebase-admin/lib/';
 import express from 'express';
 import {initializeApp} from "firebase-admin";
 import * as password from 'password-hash';
-import bodyParser from "body-parser";
+import cors from 'cors';
 
 initializeApp();
-const app = express();
-const main = express();
-
-main.use('/v1', app);
-main.use(bodyParser.json());
-main.use(bodyParser.urlencoded({extended: true}));
+export const app = express();
+app.use(cors({ origin: true }));
 
 const db = admin.firestore();
 
-export const webApi = functions.https.onRequest(main);
-
-app.post('/login', async (request, response) => {
+app.post('/login',async (request, response) => {
     try {
         const snapshot = await db.collection("users")
             .where("username", "==", request.body["username"])
@@ -31,9 +25,9 @@ app.post('/login', async (request, response) => {
         });
 
         if (users.length > 0) 
-            response.set('Access-Control-Allow-Origin', '*').status(200).json(users[0]);
+            response.set({'Access-Control-Allow-Origin': '*'}).status(200).json(users[0]);
         else
-            response.set('Access-Control-Allow-Origin', '*').status(200).json({error: "invalid login credentials"});
+            response.set({'Access-Control-Allow-Origin': '*'}).status(200).json({error: "invalid login credentials"});
     } catch (error) {
         response.status(500).send(error);
     }
