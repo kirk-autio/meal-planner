@@ -6,7 +6,7 @@ import AppBar from "@material-ui/core/AppBar";
 import * as React from "react";
 import {AppState} from "../../app/store";
 import {connect} from "react-redux";
-import {Dispatch, useRef} from "react";
+import {Dispatch} from "react";
 import {toggleAppBar} from "../../app/actions/appBarActions";
 import {IUserState} from "../../app/state/userState";
 import {login} from "../../app/actions/userActions";
