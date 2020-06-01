@@ -1,32 +1,33 @@
 ﻿import * as express from 'express';
-import * as password from "password-hash";
+// import * as password from "password-hash";
 import * as admin from "firebase-admin";
 
 admin.initializeApp();
-const db = admin.firestore();
+// const db = admin.firestore();
 
 export const router = express.Router();
 
 router.post("/login", login);
 
 function login(request: any, response: any) {
-    db.collection("users")
-        .where("username", "==", request.body["username"])
-        .get()
-        .then(snapshot => {
-            const users: any[] = [];
-            
-            snapshot.forEach(user => {
-                if (password.verify(request.body["password"], `sha1$${user.get("salt")}$2$${user.get("password")}`))
-                    users.push({token: user.ref.id, email: user.get("email"), displayName: user.get("display")});
-            });
-            
-            if (users.length > 0)
-                response.status(200).json(users[0]);
-            else 
-                response.status(200).json({error: "invalid login credentials"});
-        })
-        .catch(error => response.status(500).send(error))
+    response.status(200).json({username: request.body["username"], password: request.body["password"]});
+    // db.collection("users")
+    //     .where("username", "==", request.body["username"])
+    //     .get()
+    //     .then(snapshot => {
+    //         const users: any[] = [];
+    //        
+    //         snapshot.forEach(user => {
+    //             if (password.verify(request.body["password"], `sha1$${user.get("salt")}$2$${user.get("password")}`))
+    //                 users.push({token: user.ref.id, email: user.get("email"), displayName: user.get("display")});
+    //         });
+    //        
+    //         if (users.length > 0)
+    //             response.status(200).json(users[0]);
+    //         else 
+    //             response.status(200).json({error: "invalid login credentials"});
+    //     })
+    //     .catch(error => response.status(500).send(error))
 }
 //
 // app.post('/login',async (request, response) => {
