@@ -10,24 +10,26 @@ export const router = express.Router();
 router.post("/login", login);
 
 function login(request: any, response: any) {
-    response.status(200).json({username: request.body["username"], password: request.body["password"]});
+    response.status(200).json({token: '1234', email: 'kirk.autio@gmail.com', display: request.body["username"]});
+    return;
     // db.collection("users")
     //     .where("username", "==", request.body["username"])
     //     .get()
     //     .then(snapshot => {
-    //         const users: any[] = [];
-    //        
-    //         snapshot.forEach(user => {
-    //             if (password.verify(request.body["password"], `sha1$${user.get("salt")}$2$${user.get("password")}`))
-    //                 users.push({token: user.ref.id, email: user.get("email"), displayName: user.get("display")});
-    //         });
-    //        
-    //         if (users.length > 0)
-    //             response.status(200).json(users[0]);
-    //         else 
-    //             response.status(200).json({error: "invalid login credentials"});
+    //         response.status(200).json(snapshot);
+    //         // const users: any[] = [];
+    //         //
+    //         // snapshot.forEach(user => {
+    //         //     if (password.verify(request.body["password"], `sha1$${user.get("salt")}$2$${user.get("password")}`))
+    //         //         users.push({token: user.ref.id, email: user.get("email"), displayName: user.get("display")});
+    //         // });
+    //         //
+    //         // if (users.length > 0)
+    //         //     response.status(200).json(users[0]);
+    //         // else 
+    //         //     response.status(200).json({error: "invalid login credentials"});
     //     })
-    //     .catch(error => response.status(500).send(error))
+    //     .catch(error => response.status(200).json({error: error}))
 }
 //
 // app.post('/login',async (request, response) => {
