@@ -6,11 +6,11 @@ const userReducer = (state: IUserState = loggedOutUser, action: UserActions): IU
         case UserActionTypes.LOGIN_STARTED:
             return {...state, loading: true};
         case UserActionTypes.LOGIN_SUCCESS:
-            alert(JSON.stringify(action.payload));
-            return action.payload
+            return action.payload;
         case UserActionTypes.LOGIN_FAILED:
-            alert(action.payload);
             return {...state, loading: false, error: action.payload}
+        case UserActionTypes.LOGOUT:
+            return loggedOutUser;
         default: 
             return state;
     }
