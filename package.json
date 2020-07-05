@@ -8,14 +8,21 @@
     "@material/drawer": "^6.0.0",
     "@material/list": "^6.0.0",
     "@material/theme": "^6.0.0",
+    "@types/react-facebook-login": "^4.1.2",
     "axios": "^0.19.2",
+    "bufferutil": "^4.0.1",
     "express": "^4.17.1",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-facebook": "^8.1.4",
+    "react-facebook-login": "^4.1.1",
+    "react-google-login": "^5.1.20",
     "react-redux": "^7.2.0",
     "react-scripts": "3.4.1",
-    "typescript": "^3.9.3"
+    "sass": "^1.26.9",
+    "typescript": "^3.9.3",
+    "utf-8-validate": "^5.0.2"
   },
   "scripts": {
     "start": "react-scripts start",
