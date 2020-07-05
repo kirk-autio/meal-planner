@@ -6,6 +6,8 @@ import './App.scss';
 import {SideBar} from "./features/AppBar/SideMenu";
 import {store} from "./app/store";
 import {Provider} from "react-redux";
+import {Routes} from "./app/routes";
+import {Toolbar} from "@material-ui/core";
 
 const theme = createMuiTheme({
     palette: {
@@ -26,8 +28,10 @@ const App: React.FC = () => {
     <ThemeProvider theme={theme}>
         <Provider store={store}>
             <SiteTopMenu />
+            <Toolbar />
             <div style={{display: "flex"}}>
                 <SideBar />
+                <Routes />
             </div>
         </Provider>
     </ThemeProvider>

@@ -4,45 +4,56 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import AppBar from "@material-ui/core/AppBar";
 import * as React from "react";
-import {AppState} from "../../app/store";
-import {connect} from "react-redux";
+import {IUserState} from "../../app/state/userState";
+import {Button, Typography} from "@material-ui/core";
 import {Dispatch} from "react";
 import {toggleAppBar} from "../../app/actions/appBarActions";
-import {IUserState} from "../../app/state/userState";
-import {login} from "../../app/actions/userActions";
-import {
-    Button,
-    TextField,
-    Typography,
-} from "@material-ui/core";
+import {logout} from "../../app/actions/userActions";
+import {AppState} from "../../app/store";
+import {connect} from "react-redux";
 
 interface IProps {
     user: IUserState;
     title: string;
     toggle(): void;
-    login(username: string, password: string): void;
+    logout(): void;
 }
 
-class SiteMenu extends React.Component<IProps> {
+interface IState { 
+    username: string;
+    password: string;
+}
+
+class SiteMenu extends React.Component<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+        
+        this.state = { username: "", password: ""};
+    }
     Login = () => {
-        return (
-            <form>
-                <TextField className="menuInput" size="small" variant="filled" label="Username" />
-                <TextField className="menuInput" size="small" variant="filled" label="Password" />
-                <Button color="inherit" onClick={() => this.props.login("", "")}>Login</Button>
-            </form>    
-        )
+        if (this.props.user.token === "") {
+            return (
+                <Button color="inherit" href="/Login">Login</Button>
+            )
+        } else {
+            return (
+                <form>
+                    <Typography variant="h6">{this.props.user.displayName}</Typography>
+                    <Button color="inherit" onClick={() => this.props.logout()}>Logout</Button>
+                </form>
+            )
+        }
     }
     
     render() {
         return (
             <AppBar position="fixed" style={{zIndex: 1201}}>
                 <Toolbar>
-                    <IconButton color="inherit" aria-label="open drawer"><MenuIcon onClick={this.props.toggle} /></IconButton>
+                    <IconButton color="inherit" aria-label="open drawer"><MenuIcon onClickCapture={this.props.toggle} /></IconButton>
                     <Typography variant="h6" style={{flexGrow:1}}>{this.props.title}</Typography>
                     <this.Login />
                 </Toolbar>
-            </AppBar>   
+            </AppBar>
         )
     }
 }
@@ -50,7 +61,7 @@ class SiteMenu extends React.Component<IProps> {
 const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
         toggle: () => dispatch(toggleAppBar())
-        , login: (username: string, password: string) => dispatch(login(username, password))
+        , logout: () => dispatch(logout())
     }
 }
 
