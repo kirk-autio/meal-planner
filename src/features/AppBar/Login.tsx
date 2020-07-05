@@ -42,7 +42,7 @@ class Login extends React.Component<ILoginProps, ILoginState> {
                     <Button color="primary" style={{width: "100%"}} onClick={() => this.props.login(this.state.username, this.state.password)}>Login</Button>
                     <Typography variant="caption" className="errorText">{this.props.error}</Typography>
                     <hr ></hr> 
-                    <GoogleLogin clientId="814864358844-pm60erbbqtckgfgof0g61f1jh28uftgq.apps.googleusercontent.com" fetchBasicProfile={true} buttonText="Login with Google" onSuccess={this.googleSuccess} onFailure={_ => {}} cookiePolicy={'single_host_origin'} />
+                    <GoogleLogin clientId="814864358844-pm60erbbqtckgfgof0g61f1jh28uftgq.apps.googleusercontent.com" fetchBasicProfile={true} buttonText="Login with Google" onSuccess={this.googleSuccess} onFailure={e => console.log(e)} cookiePolicy={'single_host_origin'} />
                 </div> 
             </div>
         );
