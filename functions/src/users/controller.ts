@@ -33,8 +33,8 @@ async function socialLogin(request: any, response: any) {
         return;
     }
 
-    const user: any = await repository.register({token: accessToken, email: token.email, display: token.display, tokenType: token.tokenType}, token.email);
-    sendResponse(user.error ? await repository.socialLogin(token.email, accessToken, token.tokenType) : user, response);
+    const user: User | UserError = await repository.register({token: accessToken, email: token.email, display: token.display, tokenType: token.tokenType}, token.email);
+    sendResponse("error" in user ? await repository.socialLogin(token.email, accessToken, token.tokenType) : user, response);
 }
 
 export async function verify(token: TokenRequest): Promise<string | undefined> {
@@ -46,7 +46,7 @@ export async function verify(token: TokenRequest): Promise<string | undefined> {
 }
 
 async function register(request: any, response: any) {
-    if (await repository.exists(request.body.username)) {
+    if (await repository.exists(request.body.username, TokenType.Standard)) {
         response.status(500).json({error: "Username is currently in use"});
         return;
     }
@@ -55,5 +55,5 @@ async function register(request: any, response: any) {
 }
 
 function sendResponse(user: User | UserError, response: any): void {
-    response.status('error' in user? 500 : 200).json(user);
+    response.status("error" in user ? 500 : 200).json(user);
 }

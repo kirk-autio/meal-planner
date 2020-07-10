@@ -33,6 +33,12 @@ export interface SocialToken {
     tokenType: TokenType
 } 
 
+export function resetPassword(email: string) : Dispatch<any> {
+    return () => {
+        Axios.post(`${host_url}/users/resetPassword`, {email: email}).then();
+    }
+}
+
 export function login(username: string, password: string) : Dispatch<any> {
     return dispatch => {
         dispatch(actions.loginStarted());

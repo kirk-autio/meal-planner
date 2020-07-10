@@ -1,4 +1,4 @@
-﻿﻿.menuInput {
+﻿﻿﻿.menuInput {
   background-color: desaturate(white, 30%);
   &:hover {
     background-color: white;
@@ -8,10 +8,11 @@
 .content {
   display: flex;
   flex-grow: 1;
+  justify-content: center;
+  margin-top: 1em;
 }
 
 .loginForm {
-  width: 300px;
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -20,4 +21,5 @@
 .errorText {
   color: red;
   font-style: italic;
+  margin: 1em 1em !important;
 }

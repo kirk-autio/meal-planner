@@ -1,4 +1,4 @@
-﻿import './globalStyles.scss'
+﻿import '../../styles/globalStyles.scss'
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -11,29 +11,33 @@ import {toggleAppBar} from "../../app/actions/appBarActions";
 import {logout} from "../../app/actions/userActions";
 import {AppState} from "../../app/store";
 import {connect} from "react-redux";
+import {withRouter} from "react-router";
+import CommonComponent, {ICommonProps, ICommonState} from "../BaseComponent";
 
-interface IProps {
+interface IProps extends ICommonProps {
+    history: any;
     user: IUserState;
     title: string;
     toggle(): void;
     logout(): void;
 }
 
-interface IState { 
+interface IState extends ICommonState { 
     username: string;
     password: string;
 }
 
-class SiteMenu extends React.Component<IProps, IState> {
+class SiteMenu extends CommonComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         
         this.state = { username: "", password: ""};
     }
+    
     Login = () => {
         if (this.props.user.token === "") {
             return (
-                <Button color="inherit" href="/Login">Login</Button>
+                <Button color="inherit" onClick={() => this.props.history.push("/Login")}>Login</Button>
             )
         } else {
             return (
@@ -45,7 +49,7 @@ class SiteMenu extends React.Component<IProps, IState> {
         }
     }
     
-    render() {
+    contents() {
         return (
             <AppBar position="fixed" style={{zIndex: 1201}}>
                 <Toolbar>
@@ -72,4 +76,4 @@ const mapStateToProps = (state: AppState) => {
     }
 }
 
-export const SiteTopMenu = connect(mapStateToProps, mapDispatchToProps)(SiteMenu);
+export const SiteTopMenu = withRouter(connect(mapStateToProps, mapDispatchToProps)(SiteMenu));

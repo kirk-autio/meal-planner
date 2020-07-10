@@ -5,5 +5,5 @@
 
 export const initialState: IAppBarState = {
     title: "My Meal Planner"
-    , isOpen: true
+    , isOpen: false
 }
