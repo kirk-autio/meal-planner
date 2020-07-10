@@ -2,10 +2,14 @@
 import {OAuth2Client} from "google-auth-library";
 import {TokenType, User, UserError, userRepository} from "./userRepository";
 import * as admin from "firebase-admin";
+import * as mailer from "nodemailer";
+import {encode} from "jwt-simple";
 
 admin.initializeApp();
 export const router = express.Router();
 
+router.post("/forgotPassword", forgotPassword);
+router.post("/resetPassword", resetPassword);
 router.post("/login", login);
 router.post("/register", register);
 router.post("/socialLogin", socialLogin);
@@ -18,6 +22,37 @@ interface TokenRequest {
     tokenType: TokenType;
     email: string;
     display: string;
+}
+
+async function forgotPassword(request: any, response: any) {
+    const transporter = mailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: "kirk.autio@gmail.com",
+            pass: "whmcqalwdsrdlfzw"
+        }
+    });
+    
+    const user = await repository.getUser(request.body.email);
+    if (!user) {
+        response.status(500).json({error: "Email does not exist"});
+        return;
+    }
+    
+    const jwt: string = encode({userId: user.token}, "Ni4wuJZPdiSFeDGbcWK6");
+
+    const mailOptions = {
+        from: "kirk.autio@gmail.com",
+        to: user.email,
+        subject: "Reset your password for Meal Planner",
+        text: `https://localhost:5002/forgotPassword/${jwt}`
+    };
+
+    transporter.sendMail(mailOptions, (error) => response.status(200).json({status: error != null ? "failure" : "success"}));
+}
+
+async function resetPassword(request: any, response: any) {
+    response.status(200).json({success: true})
 }
 
 async function login(request: any, response: any) {

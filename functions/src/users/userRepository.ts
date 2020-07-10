@@ -2,7 +2,6 @@
 import * as hash from "password-hash";
 import DocumentData = admin.firestore.DocumentData;
 import QueryDocumentSnapshot = admin.firestore.QueryDocumentSnapshot;
-import DocumentReference = admin.firestore.DocumentReference;
 
 export enum TokenType {
     Standard,
@@ -31,7 +30,7 @@ export class userRepository {
             .get();
         
         return snapshot.docs.length > 0;
-    } 
+    }
     
     async socialLogin(username: string, token: string, type: TokenType) : Promise<User | UserError> {
         const error = {error: "Could not login"};
@@ -70,24 +69,33 @@ export class userRepository {
         return {token: user.id, email: doc.get("email"), display: doc.get("display"), tokenType: TokenType.Standard};
     }
     
+    async getUser(email: string): Promise<User | null> {
+        const snapshot = await this.db.collection("users")
+            .where("email", "==", email)
+            .limit(1)
+            .get();
+        
+        if (snapshot.docs.length === 0) return null;
+        
+        const user = snapshot.docs[0];
+        return {email: email, display: user.get("display"), token: user.id, tokenType: TokenType.Standard};
+    }
+    
     async register(user: User, username: string, password: string = ""): Promise<User | UserError> {
         if (await this.exists(username, user.tokenType)) return {error: "Username is already in use"};
 
-        const snapshot = await this.db.collection("users")
-            .where("email", "==", user.email)
-            .limit(1)
-            .get();
-        const existingUser: DocumentReference<DocumentData> = snapshot.docs.length === 0 ? await this.db.collection("users").add({email: user.email, display: user.display}) : snapshot.docs[0].ref;
+        const existingUser = await this.getUser(user.email);
+        const userId: string = existingUser?.token ?? (await this.db.collection("users").add({email: user.email, display: user.display})).id;
 
         const logins = this.db.collection("logins");
         if (password !== "") {
             const hashedPassword = hash.generate(password, {iterations: 2}).split('$');
-            await logins.add({username: username, password: hashedPassword[3], salt: hashedPassword[1], user: existingUser.id, tokenType: user.tokenType});
+            await logins.add({username: username, password: hashedPassword[3], salt: hashedPassword[1], user: userId, tokenType: user.tokenType});
         } else {
-            await logins.add({username: username, user: existingUser.id, tokenId: `/users/${user.token}`, tokenType: user.tokenType});
+            await logins.add({username: username, user: userId, tokenId: `/users/${user.token}`, tokenType: user.tokenType});
         }
         
-        user.token = existingUser.id;
+        user.token = userId;
         return user;
     }
 }

@@ -58,7 +58,7 @@ class Login extends CommonComponent<ILoginProps, ILoginState> {
                         <Button size={"small"} variant={"text"} onClick={() => this.props.history.push("/forgotPassword")}>Forgot Password</Button>
                     </div>
                     </form>
-                    <div><hr style={{height: "100%", marginLeft: "1em", marginRight: "1em"}} ></hr></div>  
+                    <div><hr style={{height: "100%", marginLeft: "1em", marginRight: "1em"}} /></div>  
                     <div style={{alignSelf: "center"}}>
                         <GoogleLogin clientId={this.props.googleClient} theme={"dark"} fetchBasicProfile={true} buttonText="Login with Google" onSuccess={this.googleSuccess} onFailure={e => console.log(e)} cookiePolicy={'single_host_origin'} />
                     </div>

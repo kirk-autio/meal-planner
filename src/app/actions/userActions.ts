@@ -2,6 +2,7 @@
 import {Dispatch} from "react";
 import {IActionUnion, makeAction} from "./action";
 import Axios, {AxiosResponse} from "axios";
+import {push} from "react-router-redux";
 
 const host_url: string = "https://us-central1-mealplanner-cf93f.cloudfunctions.net/api/v1"
 
@@ -9,14 +10,16 @@ export enum UserActionTypes {
     LOGIN_STARTED = "USER/LOGIN_STARTED",
     LOGIN_SUCCESS = "USER/LOGIN_SUCCESS",
     LOGIN_FAILED = "USER/LOGIN_FAILED",
-    LOGOUT = "USER/LOGOUT"
+    LOGOUT = "USER/LOGOUT",
+    GOTO_LOGIN = "USER/GOTO_LOGIN"
 }
 
 const actions = {
     loginStarted: makeAction<UserActionTypes.LOGIN_STARTED, void>(UserActionTypes.LOGIN_STARTED),
     loggedIn: makeAction<UserActionTypes.LOGIN_SUCCESS, IUserState>(UserActionTypes.LOGIN_SUCCESS),
     loginFailed: makeAction<UserActionTypes.LOGIN_FAILED, string>(UserActionTypes.LOGIN_FAILED),
-    logout: makeAction<UserActionTypes.LOGOUT, void>(UserActionTypes.LOGOUT)
+    logout: makeAction<UserActionTypes.LOGOUT, void>(UserActionTypes.LOGOUT),
+    gotoLogin: makeAction<UserActionTypes.GOTO_LOGIN, void>(UserActionTypes.GOTO_LOGIN)
 }
 
 export enum TokenType {
@@ -33,9 +36,15 @@ export interface SocialToken {
     tokenType: TokenType
 } 
 
-export function resetPassword(email: string) : Dispatch<any> {
+export function forgotPassword(email: string) : Dispatch<any> {
     return () => {
-        Axios.post(`${host_url}/users/resetPassword`, {email: email}).then();
+        Axios.post(`${host_url}/users/forgotPassword`, {email: email}).then();
+    }
+}
+
+export function resetPassword(token: string, password: string) : Dispatch<any> {
+    return dispatch => {
+        Axios.post(`${host_url}/users/resetPassword`, {token: token, password: password}).then(() => dispatch(push("/Login")));
     }
 }
 
