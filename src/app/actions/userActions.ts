@@ -11,7 +11,8 @@ export enum UserActionTypes {
     LOGIN_SUCCESS = "USER/LOGIN_SUCCESS",
     LOGIN_FAILED = "USER/LOGIN_FAILED",
     LOGOUT = "USER/LOGOUT",
-    GOTO_LOGIN = "USER/GOTO_LOGIN"
+    GOTO_LOGIN = "USER/GOTO_LOGIN",
+    GET_USER = "USER/GET"
 }
 
 const actions = {
@@ -19,7 +20,8 @@ const actions = {
     loggedIn: makeAction<UserActionTypes.LOGIN_SUCCESS, IUserState>(UserActionTypes.LOGIN_SUCCESS),
     loginFailed: makeAction<UserActionTypes.LOGIN_FAILED, string>(UserActionTypes.LOGIN_FAILED),
     logout: makeAction<UserActionTypes.LOGOUT, void>(UserActionTypes.LOGOUT),
-    gotoLogin: makeAction<UserActionTypes.GOTO_LOGIN, void>(UserActionTypes.GOTO_LOGIN)
+    gotoLogin: makeAction<UserActionTypes.GOTO_LOGIN, void>(UserActionTypes.GOTO_LOGIN),
+    getUser: makeAction<UserActionTypes.GET_USER, IUserState>(UserActionTypes.GET_USER)
 }
 
 export enum TokenType {
@@ -44,7 +46,17 @@ export function forgotPassword(email: string) : Dispatch<any> {
 
 export function resetPassword(token: string, password: string) : Dispatch<any> {
     return dispatch => {
-        Axios.post(`${host_url}/users/resetPassword`, {token: token, password: password}).then(() => dispatch(push("/Login")));
+        try {
+            Axios.post(`${host_url}/users/resetPassword`, {token: token, password: password}).then(() => { alert ("sent"); dispatch(push("/Login")) });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+}
+
+export function getUser() : Dispatch<any> {
+    return dispatch => {
+        Axios.get(`${host_url}/users/`).then(res => dispatch(actions.getUser(new UserState(res.data.token, res.data.display, res.data.email))));
     }
 }
 

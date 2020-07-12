@@ -2,7 +2,7 @@
 import React, {Dispatch} from "react";
 import {AppState} from "../../app/store";
 import {connect} from "react-redux";
-import {Button, FormControl, IconButton, Input, InputLabel} from "@material-ui/core";
+import {Button, FormControl, IconButton, Input, InputLabel, Typography} from "@material-ui/core";
 import {Visibility, VisibilityOff} from "@material-ui/icons";
 import {resetPassword} from "../../app/actions/userActions";
 
@@ -15,6 +15,7 @@ interface IState extends ICommonState {
     token: string;
     password: string;
     showPassword: boolean;
+    message: string;
 }
 
 class passwordReset extends CommonComponent<IProps, IState> {
@@ -22,12 +23,16 @@ class passwordReset extends CommonComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         
-        this.state = {token: props.match.params.id, password: "", showPassword: false};
+        this.state = {token: props.match.params.id, password: "", showPassword: false, message: ""};
         this.reset = this.reset.bind(this);
     }
 
     reset(event: React.MouseEvent) {
         event.preventDefault();
+        if (this.state.password.length < 7) {
+            this.setState({message: "Password must be at least 7 characters in length"});
+            return;
+        }
         this.props.resetPassword(this.state.token, this.state.password);
     }
     
@@ -45,6 +50,7 @@ class passwordReset extends CommonComponent<IProps, IState> {
                     <Input id="password" type={this.state.showPassword ? "text" : "password"} value={this.state.password} onChange={e => this.setState({password: e.target.value})} endAdornment={this.visibleButton()} />
                 </FormControl>
                 <Button type="submit" onClick={this.reset}>Reset Password</Button>
+                <Typography variant="caption">{this.state.message}</Typography>
             </div>
         );
     }

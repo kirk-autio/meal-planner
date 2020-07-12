@@ -13,6 +13,7 @@ import {AppState} from "../../app/store";
 import {connect} from "react-redux";
 import {withRouter} from "react-router";
 import CommonComponent, {ICommonProps, ICommonState} from "../BaseComponent";
+import {Link} from "react-router-dom";
 
 interface IProps extends ICommonProps {
     history: any;
@@ -56,6 +57,7 @@ class SiteMenu extends CommonComponent<IProps, IState> {
                     <IconButton color="inherit" aria-label="open drawer"><MenuIcon onClickCapture={this.props.toggle} /></IconButton>
                     <Typography variant="h6" style={{flexGrow:1}}>{this.props.title}</Typography>
                     <this.Login />
+                    <Link to="/Profile">Profile</Link>
                 </Toolbar>
             </AppBar>
         )
