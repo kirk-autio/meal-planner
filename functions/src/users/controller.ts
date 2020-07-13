@@ -11,7 +11,7 @@ const GOOGLE_CLIENT_ID = "814864358844-pm60erbbqtckgfgof0g61f1jh28uftgq.apps.goo
 
 admin.initializeApp();
 export const router = express.Router();
-export const authRouter = withJWTAuthMiddleware(router, AUTH_SECRET, req => req.cookies["auth"]);
+export const authRouter = withJWTAuthMiddleware(router, AUTH_SECRET, req => req.cookies.__session, undefined, (err, req, res) => {res.json({error: req.cookies})});
 
 router.post("/forgotPassword", forgotPassword);
 router.post("/resetPassword", resetPassword);
@@ -117,7 +117,7 @@ function sendResponse(user: User | UserError, response: any): void {
     if ("error" in user)
         response.status(401).json(user);
     else {
-        response.cookie("auth", encode(user, AUTH_SECRET));
+        response.cookie("__session", encode(user, AUTH_SECRET), {httpOnly: true, secure: true, expires: new Date(Date.now() + 90000)});
         response.status(200).json(user);
     }
 }

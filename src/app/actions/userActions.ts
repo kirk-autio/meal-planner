@@ -56,7 +56,7 @@ export function resetPassword(token: string, password: string) : Dispatch<any> {
 
 export function getUser() : Dispatch<any> {
     return dispatch => {
-        Axios.get(`${host_url}/users/`).then(res => dispatch(actions.getUser(new UserState(res.data.token, res.data.display, res.data.email))));
+        Axios.get(`${host_url}/users/`, {withCredentials: true}).then(res => dispatch(actions.getUser(new UserState(res.data.token, res.data.display, res.data.email))));
     }
 }
 
@@ -64,7 +64,7 @@ export function login(username: string, password: string) : Dispatch<any> {
     return dispatch => {
         dispatch(actions.loginStarted());
 
-        handle(Axios.post(`${host_url}/users/login`,{username: username, password: password})).then(action => dispatch(action));
+        handle(Axios.post(`${host_url}/users/login`,{username: username, password: password}, {withCredentials: true})).then(action => dispatch(action));
     }
 }
 

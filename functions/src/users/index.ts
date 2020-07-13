@@ -2,10 +2,12 @@ import * as express from 'express';
 import * as cors from 'cors';
 import {json, urlencoded} from 'body-parser';
 import {router} from "./controller";
+import * as cookieParser from "cookie-parser";
 
 export const app = express();
 
-app.use(cors({origin: true}))
+app.use(cors({credentials: true, origin: true}))
+    .use(cookieParser())
     .use(json())
     .use(urlencoded({extended: true}))
     .use("/v1/users", router)
