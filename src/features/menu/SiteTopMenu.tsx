@@ -1,4 +1,4 @@
-﻿import './globalStyles.scss'
+﻿import '../../styles/globalStyles.scss'
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -8,32 +8,42 @@ import {IUserState} from "../../app/state/userState";
 import {Button, Typography} from "@material-ui/core";
 import {Dispatch} from "react";
 import {toggleAppBar} from "../../app/actions/appBarActions";
-import {logout} from "../../app/actions/userActions";
+import {getUser, logout} from "../../app/actions/userActions";
 import {AppState} from "../../app/store";
 import {connect} from "react-redux";
+import {withRouter} from "react-router";
+import CommonComponent, {ICommonProps, ICommonState} from "../BaseComponent";
 
-interface IProps {
+interface IProps extends ICommonProps {
+    history: any;
     user: IUserState;
     title: string;
+    getUser(): void;
     toggle(): void;
     logout(): void;
 }
 
-interface IState { 
+interface IState extends ICommonState { 
     username: string;
     password: string;
 }
 
-class SiteMenu extends React.Component<IProps, IState> {
+class SiteMenu extends CommonComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         
         this.state = { username: "", password: ""};
     }
+
+
+    componentDidMount() {
+        this.props.getUser();
+    }
+
     Login = () => {
         if (this.props.user.token === "") {
             return (
-                <Button color="inherit" href="/Login">Login</Button>
+                <Button color="inherit" onClick={() => this.props.history.push("/Login")}>Login</Button>
             )
         } else {
             return (
@@ -45,7 +55,7 @@ class SiteMenu extends React.Component<IProps, IState> {
         }
     }
     
-    render() {
+    contents() {
         return (
             <AppBar position="fixed" style={{zIndex: 1201}}>
                 <Toolbar>
@@ -62,6 +72,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
         toggle: () => dispatch(toggleAppBar())
         , logout: () => dispatch(logout())
+        , getUser: () => dispatch(getUser())
     }
 }
 
@@ -72,4 +83,4 @@ const mapStateToProps = (state: AppState) => {
     }
 }
 
-export const SiteTopMenu = connect(mapStateToProps, mapDispatchToProps)(SiteMenu);
+export const SiteTopMenu = withRouter(connect(mapStateToProps, mapDispatchToProps)(SiteMenu));

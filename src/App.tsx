@@ -1,20 +1,21 @@
 import * as React from 'react';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
-import {orange, yellow} from '@material-ui/core/colors';
-import {SiteTopMenu} from './features/AppBar/SiteTopMenu';
-import './App.scss';
-import {SideBar} from "./features/AppBar/SideMenu";
+import {orange, yellow, red, amber} from '@material-ui/core/colors';
+import {SiteTopMenu} from './features/menu/SiteTopMenu';
+import {SideBar} from "./features/menu/SideMenu";
 import {store} from "./app/store";
 import {Provider} from "react-redux";
-import {Routes} from "./app/routes";
-import {Toolbar} from "@material-ui/core";
+import Routes from "./app/routes";
+import './styles/App.scss';
 
 const theme = createMuiTheme({
     palette: {
-       primary: {
-           main: orange["800"]
-       },
-       secondary: yellow
+        primary: {
+            main: orange["800"]
+        },
+        secondary: yellow,
+        error: red,
+        warning: amber
     },
     typography: {
         button: {
@@ -27,12 +28,12 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
         <Provider store={store}>
-            <SiteTopMenu />
-            <Toolbar />
-            <div style={{display: "flex"}}>
-                <SideBar />
-                <Routes />
-            </div>
+            <Routes>
+                <SiteTopMenu />
+                <div style={{display: "flex"}}>
+                    <SideBar />
+                </div>
+            </Routes>
         </Provider>
     </ThemeProvider>
   );
