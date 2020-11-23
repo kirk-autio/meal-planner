@@ -8,17 +8,17 @@ import {IUserState} from "../../app/state/userState";
 import {Button, Typography} from "@material-ui/core";
 import {Dispatch} from "react";
 import {toggleAppBar} from "../../app/actions/appBarActions";
-import {logout} from "../../app/actions/userActions";
+import {getUser, logout} from "../../app/actions/userActions";
 import {AppState} from "../../app/store";
 import {connect} from "react-redux";
 import {withRouter} from "react-router";
 import CommonComponent, {ICommonProps, ICommonState} from "../BaseComponent";
-import {Link} from "react-router-dom";
 
 interface IProps extends ICommonProps {
     history: any;
     user: IUserState;
     title: string;
+    getUser(): void;
     toggle(): void;
     logout(): void;
 }
@@ -34,7 +34,12 @@ class SiteMenu extends CommonComponent<IProps, IState> {
         
         this.state = { username: "", password: ""};
     }
-    
+
+
+    componentDidMount() {
+        this.props.getUser();
+    }
+
     Login = () => {
         if (this.props.user.token === "") {
             return (
@@ -57,7 +62,6 @@ class SiteMenu extends CommonComponent<IProps, IState> {
                     <IconButton color="inherit" aria-label="open drawer"><MenuIcon onClickCapture={this.props.toggle} /></IconButton>
                     <Typography variant="h6" style={{flexGrow:1}}>{this.props.title}</Typography>
                     <this.Login />
-                    <Link to="/Profile">Profile</Link>
                 </Toolbar>
             </AppBar>
         )
@@ -68,6 +72,7 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) => {
     return {
         toggle: () => dispatch(toggleAppBar())
         , logout: () => dispatch(logout())
+        , getUser: () => dispatch(getUser())
     }
 }
 

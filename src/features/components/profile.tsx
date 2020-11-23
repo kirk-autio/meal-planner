@@ -6,7 +6,6 @@ import {getUser} from "../../app/actions/userActions";
 import {Button} from "@material-ui/core";
 
 interface IState extends ICommonState {
-    
 }
 
 interface IProps extends ICommonProps {
