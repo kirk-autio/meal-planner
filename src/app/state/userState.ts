@@ -19,7 +19,7 @@ export class UserMessage implements IUserMessage {
     }
     
     getMessageFor(messageType: MessageType): string {
-        return this.messageType === MessageType.All || this.messageType === messageType ? this.message : "'";
+        return this.messageType === MessageType.All || this.messageType === messageType ? this.message : "";
     }
 }
 
