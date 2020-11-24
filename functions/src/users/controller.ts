@@ -5,13 +5,14 @@ import * as admin from "firebase-admin";
 import {decode, encode} from "jwt-simple";
 import {withJWTAuthMiddleware} from "express-kun";
 import {emailer} from "./emailer";
+import cookieParser = require("cookie-parser");
 
 const AUTH_SECRET = "juZgyhvZcF7H52DM3bkA";
 const GOOGLE_CLIENT_ID = "814864358844-pm60erbbqtckgfgof0g61f1jh28uftgq.apps.googleusercontent.com";
 
 admin.initializeApp();
-export const router = express.Router();
-export const authRouter = withJWTAuthMiddleware(router, AUTH_SECRET, req => req.cookies.__session, undefined, (err, req, res) => {res.status(401).json({error: "Not logged in"})});
+export const router = express.Router().use(cookieParser());
+export const authRouter = withJWTAuthMiddleware(router, AUTH_SECRET, req => req.cookies.__session, undefined, (err, req, res) => {res.status(401).json({message: req})});
 
 router.post("/forgotPassword", forgotPassword);
 router.post("/resetPassword", resetPassword);
@@ -32,7 +33,7 @@ interface TokenRequest {
 }
 
 async function authGet(request: any, response: any) {
-    sendResponse(decode(request.cookies.__session, AUTH_SECRET, true, "HS512"), response);
+    sendResponse(decode(request.cookies.__session, AUTH_SECRET, false, "HS512"), response);
 }
 
 async function forgotPassword(request: any, response: any) {
@@ -124,7 +125,7 @@ async function register(request: any, response: any) {
         return;
     }
 
-    let user = await repository.register({token: "", email: request.body.email, display: request.body.display, verified: false}, TokenType.Standard, request.body.username, request.body.password);
+    const user = await repository.register({token: "", email: request.body.email, display: request.body.display, verified: false}, TokenType.Standard, request.body.username, request.body.password);
     
     if (!("error" in user)) {
         const jwt: string = encode({userId: user.token, ...getJWT()}, AUTH_SECRET, "HS512");
@@ -141,7 +142,7 @@ function sendResponse(user: User | UserError, response: any): void {
     if ("error" in user)
         response.status(401).json(user);
     else {
-        response.cookie("__session", encode({...user, ...getJWT()}, AUTH_SECRET), {httpOnly: true, secure: true, expires: new Date(Date.now() + 90000)});
+        response.cookie("__session", encode({...user, ...getJWT()}, AUTH_SECRET), {httpOnly: true, secure: true, maxAge: Date.now() + 90000, sameSite: 'Lax'});
         response.status(200).json(user);
     }
 }

@@ -35,7 +35,6 @@ class SiteMenu extends CommonComponent<IProps, IState> {
         this.state = { username: "", password: ""};
     }
 
-
     componentDidMount() {
         this.props.getUser();
     }
