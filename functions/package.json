@@ -31,7 +31,7 @@
     "jsrsasign": "^8.0.20",
     "jwt-simple": "^0.5.6",
     "node-sass": "^4.14.1",
-    "nodemailer": "^6.4.10",
+    "nodemailer": "^6.4.16",
     "password-hash": "^1.2.2"
   },
   "devDependencies": {
