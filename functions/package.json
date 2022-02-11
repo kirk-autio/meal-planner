@@ -30,7 +30,7 @@
     "google-auth-library": "^6.0.2",
     "jsrsasign": "^8.0.20",
     "jwt-simple": "^0.5.6",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "nodemailer": "^6.4.10",
     "password-hash": "^1.2.2"
   },
